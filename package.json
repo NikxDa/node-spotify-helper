@@ -1,0 +1,25 @@
+{
+  "name": "node-spotify-helper",
+  "version": "1.0.0",
+  "description": "The nicest Spotify Helper of them all. Includes SpotifyWebHelper and the public Spotify Api.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "spotify",
+    "api",
+    "spotify-web-helper",
+    "web-helper",
+    "spotify-api"
+  ],
+  "dependencies": {
+    "chai": "^4.1.0",
+    "mocha": "^3.4.2",
+    "node-fetch": "^1.7.1",
+    "node-ps": "0.0.2",
+    "portscanner": "^2.1.1"
+  },
+  "author": "NikxDa",
+  "license": "MIT"
+}
