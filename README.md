@@ -11,24 +11,24 @@ npm install node-spotify-helper
 // Require the Spotify Web Helper
 const SpotifyWebHelper = require ("node-spotify-helper").SpotifyWebHelper;
 
-async function run () {
-    // Create a new instance
-    const webHelper = new SpotifyWebHelper ();
-    await webHelper.connect ();
+// Create a new instance
+const webHelper = new SpotifyWebHelper ();
 
-    // Do stuff
-    await webHelper.status ();
-    await webHelper.play ();
-    await webHelper.pause ();
-    await webHelper.volume ();
-    ...
-
-    // Terminate the process
-    process.exit (0);
-}
-
-// Run the async function
-run ();
+webHelper
+    .connect () // Connect
+    .then (() => {
+        return webHelper.status (); // Request status
+    })
+    .then ((status) => {
+        console.log (status.playing); // Music playing?
+        if (status.playing)
+            return webHelper.pause (); // Pause
+        else
+            return webHelper.play (); // Play          
+    })
+    .then ((status) => {
+        console.log (status.playing); // Music still playing?
+    });
 ```
 
 ## License
