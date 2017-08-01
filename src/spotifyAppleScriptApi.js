@@ -28,7 +28,7 @@ class SpotifyAppleScriptApi {
 
     async getVolume () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to receive the volume
         const script = `tell application "Spotify" to get sound volume`;
@@ -66,7 +66,7 @@ class SpotifyAppleScriptApi {
 
     async setVolume (value) {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Check the value range
         if (value < 0 || value > 100)
@@ -90,7 +90,7 @@ class SpotifyAppleScriptApi {
 
     async getShuffling () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to get the shuffling mode
         const script = `tell application "Spotify" to get shuffling`;
@@ -104,7 +104,7 @@ class SpotifyAppleScriptApi {
 
     async setShuffling (value) {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Verify the value
         if (typeof value !== "boolean")
@@ -132,7 +132,7 @@ class SpotifyAppleScriptApi {
 
     async getRepeating () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to get the repeating mode
         const script = `tell application "Spotify" to get repeating`;
@@ -146,7 +146,7 @@ class SpotifyAppleScriptApi {
 
     async setRepeating (value) {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Verify the value
         if (typeof value !== "boolean")
@@ -174,7 +174,7 @@ class SpotifyAppleScriptApi {
 
     async currentTrack () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Create empty data object
         const data = {};
@@ -219,7 +219,7 @@ class SpotifyAppleScriptApi {
 
     async play (uri, context) {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Define script
         let script;
@@ -227,10 +227,10 @@ class SpotifyAppleScriptApi {
         // Is the URI set? Otherwise just play
         if (uri) {
             // Update the context to integrate into the command
-            context = (context) ? `in context ${context}` : "";
+            context = (context) ? `in context "${context}"` : "";
 
             // Play a track uri, optionally with context
-            script = `tell application "Spotify" to play track ${uri}${context}`;
+            script = `tell application "Spotify" to play track "${uri}"${context}`;
         } else {
             // Just play
             script = `tell application "Spotify" to play`;
@@ -242,7 +242,7 @@ class SpotifyAppleScriptApi {
 
     async pause () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to pause
         const script = `tell application "Spotify" to pause`;
@@ -253,7 +253,7 @@ class SpotifyAppleScriptApi {
 
     async toggle () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to toggle play/pause
         const script = `tell application "Spotify" to playpause`;
@@ -262,9 +262,50 @@ class SpotifyAppleScriptApi {
         await this.runAppleScript (script);
     }
 
+    async setPosition (time) {
+        // Fix time
+        time = parseInt (time) || 0;
+
+        // Script to toggle play/pause
+        const script = `tell application "Spotify" to set player position to ${time}`;
+
+        // Run the script
+        await this.runAppleScript (script);
+    }
+
+    async getPosition () {
+        // Script to toggle play/pause
+        const script = `tell application "Spotify" to get player position`;
+
+        // Run the script
+        const time = await this.runAppleScript (script);
+
+        // Parse and return
+        return Math.round (parseInt (time));
+    }
+
+    async position (time) {
+        // Make sure we are running macOS
+        await this.ensureApiReady ();
+
+        // Param set and a number?
+        if (time === undefined) {
+            // Set position to time
+            return await this.getPosition ();
+        } else if (typeof time === "number") {
+            // Parse time
+            time = parseInt (time);
+
+            // Get the position
+            return await this.setPosition (time);
+        } else {
+            throw new Error ("Invalid time format.");
+        }
+    }
+
     async next () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to play next track
         const script = `tell application "Spotify" to next track`;
@@ -275,7 +316,7 @@ class SpotifyAppleScriptApi {
 
     async previous () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to play previous track
         const script = `tell application "Spotify" to previous track`;
@@ -286,7 +327,7 @@ class SpotifyAppleScriptApi {
 
     async volumeUp (amount) {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Parse amount
         amount = parseInt (amount) || 10;
@@ -344,17 +385,26 @@ class SpotifyAppleScriptApi {
         this.muteVolume = undefined;
     }
 
-    async activateWindow () {
+    async focusWindow () {
         // Make sure we are running macOS
-        this.ensureDarwinOnly ();
+        await this.ensureApiReady ();
 
         // Script to focus the Spotify Application
-        const script = `
-            tell application "Spotify" to activate
-        `;
+        const script = `tell application "Spotify" to activate`;
 
         // Run script
         await this.runAppleScript (script);
+    }
+
+    async ensureApiReady () {
+        // Make sure we're on macOS
+        this.ensureDarwinOnly ();
+
+        // Make sure Spotify is running
+        const spotifyRunning = await this.isSpotifyRunning ();
+
+        if (!spotifyRunning)
+            throw new Error ("Spotify is not currently running.");
     }
 
     async isSpotifyRunning () {
