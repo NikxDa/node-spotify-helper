@@ -1,6 +1,6 @@
 {
   "name": "node-spotify-helper",
-  "version": "1.0.0",
+  "version": "0.2.4",
   "description": "The nicest Spotify Helper of them all. Includes SpotifyWebHelper and the public Spotify Api.",
   "main": "index.js",
   "scripts": {
@@ -15,10 +15,11 @@
   ],
   "dependencies": {
     "chai": "^4.1.0",
-    "mocha": "^3.4.2",
-    "node-fetch": "^1.7.1",
+    "mocha": "^3.5.0",
     "node-ps": "0.0.2",
-    "portscanner": "^2.1.1"
+    "portscanner": "^2.1.1",
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
   },
   "author": "NikxDa",
   "license": "MIT"

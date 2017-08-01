@@ -1,5 +1,5 @@
 // Packages
-const fetch         = require ("node-fetch");
+const request       = require ("request-promise-native");
 const portscanner   = require ("portscanner");
 const ps            = require ("node-ps");
 
@@ -9,8 +9,14 @@ const path          = require ("path");
 
 class SpotifyWebHelper {
     constructor (config) {
-        // Origin Header for Requests
-        this.originHeader = { "origin": "https://open.spotify.com" };
+        // Default headers for requests
+        this.defaultHeaders = {
+            "Accept": "*/*",
+            "Cache-Control": "no-cache",
+            "Connection": "close",
+            "Origin": "https://open.spotify.com",
+            "User-Agent": "NodeSpotifyHelper"
+        };
 
         // Apply config
         Object.assign (this, config);
@@ -87,19 +93,23 @@ class SpotifyWebHelper {
         // Determine the pause state
         let pauseState = (state !== false) ? true : false;
 
-        // Get the pause URL
-        const pauseUrl = this.getLocalUrl ("/remote/pause.json", { pause: pauseState });
-        const pauseResponse = await fetch (pauseUrl, this.originHeader);
+        try {
+            // Get the pause URL
+            const pauseUrl = this.getLocalUrl ("/remote/pause.json", { pause: pauseState });
+            const pauseResponse = await request (this.buildRequestOptions (pauseUrl));
 
-        // Grab the response
-        const response = await pauseResponse.json ();
+            // Grab the response
+            const responseData = JSON.parse (pauseResponse);
 
-        // Check for errors
-        if (response ["error"])
-            throw new Error ("SpotifyWebHelper returned an error.");
+            // Check for errors
+            if (responseData ["error"])
+                throw new Error ("SpotifyWebHelper returned an error.");
 
-        // Parse returned status and return
-        return this.status (response);
+            // Parse the data and return
+            return this.status (responseData);
+        } catch (err) {
+            throw new Error ("Pause request failed.");
+        }
     }
 
     async play (uri, context) {
@@ -120,13 +130,24 @@ class SpotifyWebHelper {
         // Context placeholder
         context = context || "";
 
-        // Build play URL
-        const playUrl = this.getLocalUrl ("/remote/play.json", { uri: uri, context: context });
-        const playResponse = await fetch (playUrl, this.originHeader);
+        // Try requesting the resource
+        try {
+            // Build play URL
+            const playUrl = this.getLocalUrl ("/remote/play.json", { uri: uri, context: context });
+            const playResponse = await request (this.buildRequestOptions (playUrl));
 
-        // Parse response into JSON and return
-        const response = playResponse.json ();
-        return this.status (response);
+            // Parse response into JSON and return
+            const responseData = JSON.parse (playResponse);
+
+            // Check for errors
+            if (responseData ["error"])
+                throw new Error ("SpotifyWebHelper returned an error.");
+
+            // Parse the data and return
+            return this.status (responseData);
+        } catch (err) {
+            throw new Error ("Play request failed.");
+        }
     }
 
     async rawStatus () {
@@ -134,13 +155,18 @@ class SpotifyWebHelper {
         if (!this.connectionEstablished)
             throw new Error ("Not connected to the WebHelper.");
 
-        // Build status URL
-        const statusUrl = this.getLocalUrl ("/remote/status.json");
-        const statusResponse = await fetch (statusUrl, this.originHeader);
+        try {
+            // Build status URL
+            const statusUrl = this.getLocalUrl ("/remote/status.json");
+            const statusResponse = await request (this.buildRequestOptions (statusUrl));
 
-        // Parse status into JSON and return
-        const status = await statusResponse.json ();
-        return status;
+            // Parse status into JSON and return
+            const status = JSON.parse (statusResponse);
+            return status;
+        } catch (err) {
+            console.log (err);
+            throw new Error ("Status request failed.");
+        }
     }
 
     async status (raw) {
@@ -267,21 +293,20 @@ class SpotifyWebHelper {
             this.helperPort = helperPort;
 
             // First grab OAuth token
-            const oAuthResponse = await fetch ("https://open.spotify.com/token");
-            if (oAuthResponse.status !== 200)
-                throw new Error ("Invalid response from CSRF Server");
+            const oAuthUrl = "https://open.spotify.com/token";
+            const oAuthResponse = await request (this.buildRequestOptions (oAuthUrl));
+            const oAuthData = JSON.parse (oAuthResponse);
 
             // Extract oAuth Token
-            const oAuthToken = (await oAuthResponse.json ()) ["t"];
+            const oAuthToken = oAuthData ["t"];
 
             // Then grab CSRF token
             const csrfUrl = this.getLocalUrl ("/simplecsrf/token.json");
-            const csrfResponse = await fetch (csrfUrl, { headers: this.originHeader });
-            if (csrfResponse.status !== 200)
-                throw new Error ("Invalid response from CSRF Server");
+            const csrfResponse = await request (this.buildRequestOptions (csrfUrl));
+            const csrfData = JSON.parse (csrfResponse);
 
             // Extract CSRF Token
-            const csrfToken = (await csrfResponse.json ()) ["token"];
+            const csrfToken = csrfData ["token"];
 
             // Return everything
             return {
@@ -347,6 +372,14 @@ class SpotifyWebHelper {
         else
             // Cannot currently support because I have no idea what paths are used
             return false;
+    }
+
+    buildRequestOptions (uri) {
+        // Apply headers by default
+        return {
+            uri: uri,
+            headers: this.defaultHeaders
+        };
     }
 }
 

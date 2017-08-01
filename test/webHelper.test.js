@@ -11,8 +11,8 @@ describe ("Spotify Web Helper API", function () {
         expect (webHelper).to.be.instanceof (SpotifyWebHelper);
     });
 
-    it ("should have a property originHeader", function () {
-        expect (webHelper).to.have.property ("originHeader");
+    it ("should have a property defaultHeaders", function () {
+        expect (webHelper).to.have.property ("defaultHeaders");
     });
 
     describe ("Function connect ()", function () {
