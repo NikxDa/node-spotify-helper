@@ -14,7 +14,9 @@
     "spotify-api"
   ],
   "dependencies": {
+    "base-64": "^0.1.0",
     "chai": "^4.1.0",
+    "fs-extra": "^4.0.1",
     "mocha": "^3.5.0",
     "node-ps": "0.0.2",
     "portscanner": "^2.1.1",

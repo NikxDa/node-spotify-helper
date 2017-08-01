@@ -176,9 +176,9 @@ class SpotifyWebHelper {
 
         // Return refurbished status
         return {
-            playing: status.playing || undefined,
-            volume: status.volume || undefined,
-            time: status.playing_position || undefined,
+            playing: status.playing || false,
+            volume: status.volume || 0,
+            time: status.playing_position || 0,
             current: (status.track) ? {
                 track: {
                     name: status.track.track_resource.name,
@@ -315,7 +315,7 @@ class SpotifyWebHelper {
             };
         } catch (err) {
             // Something went wrong
-            throw new Error ("Error during authentication: " + err.message);
+            throw new Error ("Error during authentication.");
         }
     }
 
