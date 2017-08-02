@@ -45,12 +45,12 @@ webHelper
 Currently, the NodeJS Spotify Helper exposes three APIs. The Web API queries the public Spotify Api (requires a clientId and a clientSecret). The Web Helper API controls the local SpotifyWebHelper executable. The AppleScript API uses AppleScript to control the Spotify Application directly (macOS/OSX only). Every API is written in ES6, completely commented and uses Promises for nearly all functions. Goodbye callback hell!
 
 ## Web API
-The class ```js
-NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs. The available methods are:
+The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs. The available methods are:
 
 #### authenticate (clientId, clientSecret)
 Example: ```js
-await webApi.authenticate ("XXXX", "YYYY");`
+await webApi.authenticate ("XXXX", "YYYY");
+```
 ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually. For further information, visit [the Spotify Site](https://developer.spotify.com/my-applications/). This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
 
 #### search (text, type, limit = 20, offset = 0, retry = false)
