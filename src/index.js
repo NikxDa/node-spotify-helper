@@ -5,5 +5,5 @@ const SpotifyAppleScriptApi = require ("./SpotifyAppleScriptApi");
 module.exports = {
     SpotifyWebHelper,
     SpotifyWebApi,
-    SpotifyAppleScriptApi
+    SpotifyAppleScriptApi,
 };
