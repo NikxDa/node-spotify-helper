@@ -14,9 +14,9 @@ $ npm install node-spotify-helper
     1. [Web API](#web-api)
     2. [WebHelper API](#webhelper-api)
     3. [AppleScript API](#applescript-api)
-3. Issues
-4. Improve these docs
-5. License
+3. [Issues](#issues)
+4. [Improve these docs](#improve-these-docs)
+5. [License](#license)
 
 ## Quick Start
 ```js
