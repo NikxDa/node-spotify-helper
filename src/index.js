@@ -1,6 +1,6 @@
 const SpotifyWebHelper      = require ("./spotifyWebHelper");
 const SpotifyWebApi         = require ("./spotifyWebApi");
-const SpotifyAppleScriptApi = require ("./SpotifyAppleScriptApi");
+const SpotifyAppleScriptApi = require ("./spotifyAppleScriptApi");
 
 module.exports = {
     SpotifyWebHelper,

@@ -221,23 +221,20 @@ class SpotifyAppleScriptApi {
         // Make sure we are running macOS
         await this.ensureApiReady ();
 
-        // Define script
-        let script;
-
         // Is the URI set? Otherwise just play
         if (uri) {
             // Update the context to integrate into the command
             context = (context) ? `in context "${context}"` : "";
 
             // Play a track uri, optionally with context
-            script = `tell application "Spotify" to play track "${uri}"${context}`;
+            const script = `tell application "Spotify" to play track "${uri}"${context}`;
+
+            // Run the script
+            await this.runAppleScript (script);
         } else {
             // User probably wanted to unpause
             await this.unpause ();
         }
-
-        // Run the script
-        await this.runAppleScript (script);
     }
 
     async pause () {
@@ -442,6 +439,9 @@ class SpotifyAppleScriptApi {
         // Make sure we are running macOS
         this.ensureDarwinOnly ();
 
+        // Is script set?
+        script = script || "";
+
         // Spawn the process
         const process = spawn (this.scriptName, ["-ss"]);
 
@@ -460,7 +460,6 @@ class SpotifyAppleScriptApi {
             });
 
             // Pipe the script into stdin and end
-            console.log (script);
             process.stdin.write (script);
             process.stdin.end ();
         };

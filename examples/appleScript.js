@@ -1,6 +1,6 @@
 // AppleScriptApi
 
-const AppleScriptApi = require ("./src/").SpotifyAppleScriptApi;
+const AppleScriptApi = require ("../src/").SpotifyAppleScriptApi;
 const api = new AppleScriptApi ();
 
 // Using an async function
