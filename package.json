@@ -1,6 +1,6 @@
 {
   "name": "node-spotify-helper",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "The nicest Spotify Helper of them all. Includes SpotifyWebHelper and the public Spotify Api.",
   "main": "src/index.js",
   "scripts": {
