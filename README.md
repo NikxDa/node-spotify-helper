@@ -1,6 +1,6 @@
 # NodeJS Spotify Helper
 The sweetest Spotify helper out there. Includes SpotifyWebHelper and the public Spotify API. Actively maintained!
-[![NPM](https://nodei.co/npm/<package>.png)](https://npmjs.org/package/node-spotify-helper)
+[![NPM](https://nodei.co/npm/node-spotify-helper.png)](https://npmjs.org/package/node-spotify-helper)
 
 ## Installation
 ```
