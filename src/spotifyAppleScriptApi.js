@@ -232,8 +232,8 @@ class SpotifyAppleScriptApi {
             // Play a track uri, optionally with context
             script = `tell application "Spotify" to play track "${uri}"${context}`;
         } else {
-            // Just play
-            script = `tell application "Spotify" to play`;
+            // User probably wanted to unpause
+            await this.unpause ();
         }
 
         // Run the script
@@ -251,7 +251,18 @@ class SpotifyAppleScriptApi {
         await this.runAppleScript (script);
     }
 
-    async toggle () {
+    async unpause () {
+        // Make sure we are running macOS
+        await this.ensureApiReady ();
+
+        // Script to pause
+        const script = `tell application "Spotify" to play`;
+
+        // Run the script
+        await this.runAppleScript (script);
+    }
+
+    async playPause () {
         // Make sure we are running macOS
         await this.ensureApiReady ();
 
@@ -266,7 +277,7 @@ class SpotifyAppleScriptApi {
         // Fix time
         time = parseInt (time) || 0;
 
-        // Script to toggle play/pause
+        // Script to set player position
         const script = `tell application "Spotify" to set player position to ${time}`;
 
         // Run the script
@@ -274,7 +285,7 @@ class SpotifyAppleScriptApi {
     }
 
     async getPosition () {
-        // Script to toggle play/pause
+        // Script to get player position
         const script = `tell application "Spotify" to get player position`;
 
         // Run the script
@@ -449,6 +460,7 @@ class SpotifyAppleScriptApi {
             });
 
             // Pipe the script into stdin and end
+            console.log (script);
             process.stdin.write (script);
             process.stdin.end ();
         };
