@@ -13,6 +13,10 @@
     "web-helper",
     "spotify-api"
   ],
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/NikxDa/node-spotify-helper"
+  },
   "dependencies": {
     "base-64": "^0.1.0",
     "chai": "^4.1.0",
