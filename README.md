@@ -47,7 +47,9 @@ webHelper
 Currently, the NodeJS Spotify Helper exposes three APIs. The Web API queries the public Spotify Api (requires a clientId and a clientSecret). The Web Helper API controls the local SpotifyWebHelper executable. The AppleScript API uses AppleScript to control the Spotify Application directly (macOS/OSX only). Every API is written in ES6, completely commented and uses Promises for nearly all functions. Goodbye callback hell!
 
 ## Web API
-The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs. Create a new instance:
+The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs.
+
+Create a new instance:
 ```js
 const NodeSpotify = require ("node-spotify-helper");
 const webApi = new NodeSpotify.SpotifyWebApi ();
@@ -58,10 +60,14 @@ Example:
 ```js
 await webApi.authenticate ("XXXX", "YYYY");
 ```
-ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually. For further information, visit [the Spotify Site](https://developer.spotify.com/my-applications/). This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
+
+ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually.
+For further information, visit [this Spotify site](https://developer.spotify.com/my-applications/).
+This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
 
 #### search (text, type, limit = 20, offset = 0, retry = false)
 Searches the Spotify Web Api and returns the raw JSON result.
+
 Example:
 ```js
 await webApi.search ("Calvin Harris", "track");
@@ -70,6 +76,7 @@ await webApi.search ("Calvin Harris", "track");
 
 #### searchTracks (text, limit, offset)
 A wrapper for search() which returns a beautified list of tracks.
+
 Example:
 ```js
 const tracks = await webApi.searchTracks ("Calvin Harris"); // Same as above
@@ -93,6 +100,7 @@ Return value format:
 
 #### searchPlaylists (text, limit, offset)
 A wrapper for search() which returns a beautified list of playlists.
+
 Example:
 ```js
 const playlists = await webApi.searchPlaylists ("Charts");
@@ -110,6 +118,7 @@ Return value format:
 
 #### searchArtists (text, limit, offset)
 A wrapper for search() which returns a beautified list of artists.
+
 Example:
 ```js
 const artists = await webApi.searchArtists ("Katy Perry");
