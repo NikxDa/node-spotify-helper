@@ -44,9 +44,9 @@ const webApi = new NodeSpotify.SpotifyWebApi ();
 
 Currently, the NodeJS Spotify Helper exposes three APIs. 
 
-- The **Web API** queries the public Spotify Api (requires a clientId and a clientSecret). 
-- The **Web Helper API** controls the local SpotifyWebHelper executable. 
-- The **AppleScript API** uses AppleScript to control the Spotify Application directly (macOS/OSX only). 
+- The *Web API* queries the public Spotify Api (requires a clientId and a clientSecret). 
+- The *Web Helper API* controls the local SpotifyWebHelper executable. 
+- The *AppleScript API* uses AppleScript to control the Spotify Application directly (macOS/OSX only). 
 
 Every API is written in ES6, completely commented and uses Promises for nearly all functions. Goodbye callback hell!
 
@@ -55,7 +55,7 @@ Every API is written in ES6, completely commented and uses Promises for nearly a
 ## Web API
 The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs.
 
-**Create a new instance:**
+*Create a new instance:*
 ```js
 const NodeSpotify = require ("node-spotify-helper");
 const webApi = new NodeSpotify.SpotifyWebApi ();
@@ -99,16 +99,15 @@ searchPlaylists (text, [limit=20], [offset=0])
 
 Authenticates the client on the Spotify Web Api.
 
-**Example:**
+*Example:*
 ```js
 await webApi.authenticate ("XXXX", "YYYY");
 ```
 
-**Note:**
+*Note:*
 
 ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually.
-For further information, visit [this Spotify site](https://developer.spotify.com/my-applications/).
-This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
+For further information, visit [this Spotify site](https://developer.spotify.com/my-applications/). This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
 
 
 
@@ -116,7 +115,7 @@ This function has to be called before any other function in order for them to wo
 
 Searches the Spotify Web Api and returns the raw JSON result.
 
-**Example:**
+*Example:*
 ```js
 await webApi.search ("Calvin Harris", "track");
 ```
@@ -127,12 +126,12 @@ await webApi.search ("Calvin Harris", "track");
 
 A wrapper for search() which returns a beautified list of tracks.
 
-**Example:**
+*Example:*
 ```js
 const tracks = await webApi.searchTracks ("Calvin Harris"); // Same as above
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 [{
     album: {
@@ -153,12 +152,12 @@ const tracks = await webApi.searchTracks ("Calvin Harris"); // Same as above
 
 A wrapper for search() which returns a beautified list of playlists.
 
-**Example:**
+*Example:*
 ```js
 const playlists = await webApi.searchPlaylists ("Charts");
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 [{
     name: String,
@@ -173,12 +172,12 @@ const playlists = await webApi.searchPlaylists ("Charts");
 
 A wrapper for search() which returns a beautified list of artists.
 
-**Example:**
+*Example:*
 ```js
 const artists = await webApi.searchArtists ("Katy Perry");
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 [{
     name: String,
@@ -195,7 +194,7 @@ const artists = await webApi.searchArtists ("Katy Perry");
 
 The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs.
 
-**Create a new instance:**
+*Create a new instance:*
 ```js
 const NodeSpotify = require ("node-spotify-helper");
 const webHelper = new NodeSpotify.SpotifyWebHelper ();
@@ -247,7 +246,7 @@ volume ()
 
 Obtains the port on which the SpotifyWebHelper is running and builds a URI out of it. Further obtains authentication tokens and saves them to use for the other functions. Returns the connection URI.
 
-**Example:**
+*Example:*
 ```js
 const uri = await webHelper.connect ();
 // -> https://127.0.0.1:4370/
@@ -259,12 +258,12 @@ const uri = await webHelper.connect ();
 
 Internally called by connect, but might be useful for other actions not included in this API. *You will not need this function to use the API*. Returns a CSRF-Token and an OAuth-Token to query the SpotifyWebHelper.
 
-**Example:**
+*Example:*
 ```js
 const uri = await webHelper.connect ();
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 {
     oAuth: String,
@@ -278,7 +277,7 @@ const uri = await webHelper.connect ();
 
 Play a Spotify URI, optionally in a context (album or playlist URI). If no uri is supplied, the call will be interpreted as a call to `unpause()`.
 
-**Example:**
+*Example:*
 ```js
 await webHelper.play ("spotify:track:4uLU6hMCjMI75M1A2tKUQC");
 ```
@@ -289,7 +288,7 @@ await webHelper.play ("spotify:track:4uLU6hMCjMI75M1A2tKUQC");
 
 Pause (or unpause) the current playback.
 
-**Example:**
+*Example:*
 ```js
 await webHelper.pause ();
 ```
@@ -300,7 +299,7 @@ await webHelper.pause ();
 
 Wrapper for pause (), which unpauses the playback if it's paused.
 
-**Example:**
+*Example:*
 ```js
 await webHelper.unpause ();
 ```
@@ -311,12 +310,12 @@ await webHelper.unpause ();
 
 Gets the current status from the SpotifyWebHelper and returns a beautified result.
 
-**Example:**
+*Example:*
 ```js
 const status = await webHelper.status ();
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 {
     playing: Boolean,
@@ -348,7 +347,7 @@ const status = await webHelper.status ();
 
 Gets the current status from the SpotifyWebHelper but returns the raw result received.
 
-**Example:**
+*Example:*
 ```js
 const raw = await webHelper.rawStatus ();
 ```
@@ -359,12 +358,12 @@ const raw = await webHelper.rawStatus ();
 
 Checks which buttons are enabled and returns the information.
 
-**Example:**
+*Example:*
 ```js
 const nextEnabled = (await webHelper.isEnabled ()).nextTrack;
 ```
 
-**Return value format:**
+*Return value format:*
 ```
 {
     previousTrack: Boolean,
@@ -379,7 +378,7 @@ const nextEnabled = (await webHelper.isEnabled ()).nextTrack;
 
 Returns version information of the SpotifyWebHelper.
 
-**Example:**
+*Example:*
 ```js
 const version = await webHelper.information ();
 // -> { version: String, clientVersion: String }
@@ -391,7 +390,8 @@ const version = await webHelper.information ();
 
 Checks whether the client is currently playing music.
 
-**Example:**
+*Example:*
+
 ```js
 const isPlaying = await webHelper.isPlaying ();
 // -> Boolean
@@ -403,7 +403,7 @@ const isPlaying = await webHelper.isPlaying ();
 
 Checks whether the client's shuffle mode is currently enabled.
 
-**Example:**
+*Example:*
 ```js
 const isShuffling = await webHelper.isShuffling ();
 // -> Boolean
@@ -415,7 +415,7 @@ const isShuffling = await webHelper.isShuffling ();
 
 Checks whether the client's repeating mode is currently enabled.
 
-**Example:**
+*Example:*
 ```js
 const isRepeating = await webHelper.isRepeating ();
 // -> Boolean
@@ -427,7 +427,7 @@ const isRepeating = await webHelper.isRepeating ();
 
 Retrieves the current client volume. This value is read-only because the WebHelper does not allow volume changes.
 
-**Example:**
+*Example:*
 ```js
 const volume = await webHelper.volume ();
 // -> Number
@@ -439,7 +439,7 @@ const volume = await webHelper.volume ();
 
 The class `NodeSpotify.SpotifyAppleScriptApi` can be used to directly interact with the Spoitify application on macOS/OSX. Since this functionality requires macOS/OSX, the class will throw an error during construction and during every method call when on any other operating system.
 
-**Create a new instance:**
+*Create a new instance:*
 ```js
 const NodeSpotify = require ("node-spotify-helper");
 const appleScript = new NodeSpotify.SpotifyAppleScriptApi ();
@@ -495,7 +495,7 @@ isSpotifyRunning ()
 #### play ([uri], [context])
 Plays a URI, optionally in a context (artist or playlist URI). If no argument is supplied, the call will be treated as an unpause() call.
 
-Example:
+*Example:*
 ```js
 await appleScript.play ("spotify:track:4uLU6hMCjMI75M1A2tKUQC");
 ```
@@ -518,7 +518,7 @@ await appleScript.playPause ();
 
 Pauses the client playback. 
 
-Example:
+*Example:*
 ```js
 await appleScript.pause ();
 ```
@@ -529,7 +529,7 @@ await appleScript.pause ();
 
 Resumes the client playback.
 
-Example:
+*Example:*
 ```js
 await appleScript.unpause ();
 ```
@@ -540,12 +540,12 @@ await appleScript.unpause ();
 
 Gets information about the current track.
 
-Example:
+*Example:*
 ```js
 const track = await appleScript.currentTrack ();
 ```
 
-Return value format:
+*Return value format:*
 ```
 {
     name: String,
@@ -568,9 +568,11 @@ Return value format:
 
 When `amount` is supplied, will set the client volume to `amount`. When `amount` is not supplied, the function will return the current client volume.
 
-Note: This function is a wrapper for `getVolume ()` and `setVolume (mode)`, which can be used instead.
+*Note:* 
 
-Example:
+This function is a wrapper for `getVolume ()` and `setVolume (mode)`, which can be used instead.
+
+*Example:*
 
 ```js
 const currentVolume = await appleScript.volume ();
