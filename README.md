@@ -44,24 +44,30 @@ webHelper
 ## Available APIs
 Currently, the NodeJS Spotify Helper exposes three APIs. The Web API queries the public Spotify Api (requires a clientId and a clientSecret). The Web Helper API controls the local SpotifyWebHelper executable. The AppleScript API uses AppleScript to control the Spotify Application directly (macOS/OSX only). Every API is written in ES6, completely commented and uses Promises for nearly all functions. Goodbye callback hell!
 
-### Web API
-The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs. The available methods are:
+## Web API
+The class ```js
+NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs. The available methods are:
 
 #### authenticate (clientId, clientSecret)
-Example: `await webApi.authenticate ("XXXX", "YYYY");`
+Example: ```js
+await webApi.authenticate ("XXXX", "YYYY");`
 ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually. For further information, visit [the Spotify Site](https://developer.spotify.com/my-applications/). This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
 
 #### search (text, type, limit = 20, offset = 0, retry = false)
-Example: `await webApi.search ("Calvin Harris", "track")`
+Example: ```js
+await webApi.search ("Calvin Harris", "track")
+```
 Searches the Spotify Web Api and returns the raw JSON result.
 
 #### searchTracks (text, limit, offset)
-Example: `await webApi.searchTracks ("Calvin Harris") // Same as above`
+Example: ```js
+await webApi.searchTracks ("Calvin Harris") // Same as above
+```
 Wrapper for search. Returns a list of beautified Spotify tracks in the form of:
 ```
 [{
     album: {
-        name: String      ,
+        name: String,
         uri: String
     },
     artists: [String],
@@ -73,7 +79,9 @@ Wrapper for search. Returns a list of beautified Spotify tracks in the form of:
 ```
 
 #### searchPlaylists (text, limit, offset)
-Example: `await webApi.searchPlaylists ("Charts")`
+Example: ```js
+await webApi.searchPlaylists ("Charts")
+```
 Wrapper for search. Returns a list of beautified Spotify playlists in the form of:
 ```
 [{
@@ -84,7 +92,9 @@ Wrapper for search. Returns a list of beautified Spotify playlists in the form o
 ```
 
 #### searchArtists (text, limit, offset)
-Example: `await webApi.searchArtists ("Katy Perry")`
+Example: ```js
+await webApi.searchArtists ("Katy Perry")
+```
 Wrapper for search. Returns a list of beautified Spotify artists in the form of:
 ```
 [{
@@ -96,10 +106,10 @@ Wrapper for search. Returns a list of beautified Spotify artists in the form of:
 }]
 ```
 
-### WebHelper API
+## WebHelper API
 This will follow soon. Head over to the code and take a look yourself.
 
-### AppleScript API
+## AppleScript API
 This will follow soon. Head over to the code and take a look yourself.
 
 ## Issues
