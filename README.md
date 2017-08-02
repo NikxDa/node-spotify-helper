@@ -61,18 +61,21 @@ await webApi.authenticate ("XXXX", "YYYY");
 ClientId and ClientSecret can be obtained via Spotify, where an application needs to be added manually. For further information, visit [the Spotify Site](https://developer.spotify.com/my-applications/). This function has to be called before any other function in order for them to work properly. An error will be thrown when calling any other function before authenticating.
 
 #### search (text, type, limit = 20, offset = 0, retry = false)
+Searches the Spotify Web Api and returns the raw JSON result.
 Example:
 ```js
-await webApi.search ("Calvin Harris", "track")
+await webApi.search ("Calvin Harris", "track");
 ```
-Searches the Spotify Web Api and returns the raw JSON result.
+
 
 #### searchTracks (text, limit, offset)
+A wrapper for search() which returns a beautified list of tracks.
 Example:
 ```js
-await webApi.searchTracks ("Calvin Harris") // Same as above
+const tracks = await webApi.searchTracks ("Calvin Harris"); // Same as above
 ```
-Wrapper for search. Returns a list of beautified Spotify tracks in the form of:
+
+Return value format:
 ```
 [{
     album: {
@@ -87,12 +90,15 @@ Wrapper for search. Returns a list of beautified Spotify tracks in the form of:
 }]
 ```
 
+
 #### searchPlaylists (text, limit, offset)
+A wrapper for search() which returns a beautified list of playlists.
 Example:
 ```js
-await webApi.searchPlaylists ("Charts")
+const playlists = await webApi.searchPlaylists ("Charts");
 ```
-Wrapper for search. Returns a list of beautified Spotify playlists in the form of:
+
+Return value format:
 ```
 [{
     name: String,
@@ -101,12 +107,15 @@ Wrapper for search. Returns a list of beautified Spotify playlists in the form o
 }]
 ```
 
+
 #### searchArtists (text, limit, offset)
+A wrapper for search() which returns a beautified list of artists.
 Example:
 ```js
-await webApi.searchArtists ("Katy Perry")
+const artists = await webApi.searchArtists ("Katy Perry");
 ```
-Wrapper for search. Returns a list of beautified Spotify artists in the form of:
+
+Return value format:
 ```
 [{
     name: String,
@@ -118,13 +127,20 @@ Wrapper for search. Returns a list of beautified Spotify artists in the form of:
 ```
 
 ## WebHelper API
-This will follow soon. Head over to the code and take a look yourself.
+The class `NodeSpotify.SpotifyWebApi` can be used to query the public Spotify Web Api. Note that this wrapper currently only supports public functionality, no private actions such as a user's playlists or songs.
+
+Create a new instance:
+```js
+const NodeSpotify = require ("node-spotify-helper");
+const webApi = new NodeSpotify.SpotifyWebApi ();
+```
+
 
 ## AppleScript API
 This will follow soon. Head over to the code and take a look yourself.
 
 ## Issues
-If you find any issues with this library, please head over to [GitHub] and submit an issue there. As this library is actively maintained, I'll do my best to fix errors as quickly as possible.
+If you find any issues with this library, please head over to [GitHub](https://github.com/NikxDa/node-spotify-helper) and submit an issue there. As this library is actively maintained, I'll do my best to fix errors as quickly as possible.
 
 ## Improve these docs
 If you have time and want to help this project, feel free to add to these docs. Every contributer will be listed here.
