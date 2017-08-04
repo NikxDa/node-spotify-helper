@@ -26,7 +26,7 @@ class SpotifyWebApi {
             "Accept": "application/json"
         };
 
-        const query = `?query=${text}&type=${type}${(limit) ? "&limit=" + limit : ""}${(offset) ? "&offset=" + offset : ""}`;
+        const query = `?query=${text}&type=${type}${(limit) ? "&limit=" + limit : ""}${(offset) ? "&offset=" + offset : ""}&market=${this.market}`;
         const url = this.urls.search + query;
 
         const response = await request ({ uri: url, headers: headers });
@@ -44,7 +44,7 @@ class SpotifyWebApi {
                     throw new Error (`Authentication failed repeatedly.`);
                 }
             } else {
-                throw new Error (`ApiError: ${responseData.error}`);
+                throw new Error (`ApiError: ${responseData.error.message}`);
             }
         }
 
@@ -100,10 +100,6 @@ class SpotifyWebApi {
         const filteredResponse = [];
 
         tracks.forEach ((track) => {
-            if (this.market)
-                if (track.available_markets.indexOf (this.market) == -1)
-                    return;
-
             const filteredTrack = {
                 album: {
                     name: track.album.name,

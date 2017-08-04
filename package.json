@@ -9,9 +9,15 @@
   "keywords": [
     "spotify",
     "api",
+    "nodejs",
     "spotify-web-helper",
     "web-helper",
-    "spotify-api"
+    "spotify-api",
+    "applescript",
+    "spotify-applescript",
+    "node-spotify-applescript",
+    "web-api",
+    "spotify-web-api"
   ],
   "repository": {
     "type": "git",

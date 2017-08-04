@@ -42,11 +42,11 @@ const webApi = new NodeSpotify.SpotifyWebApi ();
 
 ## Available APIs
 
-Currently, the NodeJS Spotify Helper exposes three APIs. 
+Currently, the NodeJS Spotify Helper exposes three APIs.
 
-- The *Web API* queries the public Spotify Api (requires a clientId and a clientSecret). 
-- The *Web Helper API* controls the local SpotifyWebHelper executable. 
-- The *AppleScript API* uses AppleScript to control the Spotify Application directly (macOS/OSX only). 
+- The *Web API* queries the public Spotify Api (requires a clientId and a clientSecret).
+- The *Web Helper API* controls the local SpotifyWebHelper executable.
+- The *AppleScript API* uses AppleScript to control the Spotify Application directly (macOS/OSX only).
 
 Every API is written in ES6, completely commented and uses Promises for nearly all functions. Goodbye callback hell!
 
@@ -70,8 +70,8 @@ A really small sample code to get you going. This code authenticates with the Sp
 ```js
 async function webApiDemo () {
   // Connect to the Web Api using your clientId and clientSecret
-  await webApi.authenticate ("clientId", "clientSecret"); 
-  
+  await webApi.authenticate ("clientId", "clientSecret");
+
   // Run a query
   const artists = await webApi.searchArtists ("Jackson 5");
 }
@@ -210,7 +210,7 @@ A really small sample code to get you going. This code fetches the authenticatio
 async function webHelperDemo () {
   // Connect to the WebHelper
   await webHelper.connect ();
-  
+
   // Pause the current playback
   await webHelper.pause ();
 }
@@ -260,7 +260,7 @@ Internally called by connect, but might be useful for other actions not included
 
 *Example:*
 ```js
-const uri = await webHelper.connect ();
+const tokens = await webHelper.getTokens ();
 ```
 
 *Return value format:*
@@ -456,7 +456,7 @@ async function appleSriptDemo () {
   // Mute and pause client
   await appleScript.mute ();
   await appleScript.pause ();
-  
+
   // Activate the window
   await appleScript.focusWindow ();
 }
@@ -516,7 +516,7 @@ await appleScript.playPause ();
 
 #### pause ()
 
-Pauses the client playback. 
+Pauses the client playback.
 
 *Example:*
 ```js
@@ -568,7 +568,7 @@ const track = await appleScript.currentTrack ();
 
 When `amount` is supplied, will set the client volume to `amount`. When `amount` is not supplied, the function will return the current client volume.
 
-*Note:* 
+*Note:*
 
 This function is a wrapper for `getVolume ()` and `setVolume (mode)`, which can be used instead.
 
@@ -728,7 +728,7 @@ If these questions are answered in detail, a quick fix should be found for every
 
 ## Improve these docs
 
-These documents try to point out most of the available functions and what they are doing. Should you find that anything is missing or incorrect, head over to this project's [GitHub](https://github.com/NikxDa/node-spotify) and create a pull request to update this document. If your submitted information is correct and helpful, your request will be merged and you will be listed here. _You can also add yourself to this list._ 
+These documents try to point out most of the available functions and what they are doing. Should you find that anything is missing or incorrect, head over to this project's [GitHub](https://github.com/NikxDa/node-spotify) and create a pull request to update this document. If your submitted information is correct and helpful, your request will be merged and you will be listed here. _You can also add yourself to this list._
 
 #### Contributors:
 
