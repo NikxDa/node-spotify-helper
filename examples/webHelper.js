@@ -1,7 +1,7 @@
 // WebHelperApi
 
-const AppleScriptApi = require ("../src/").SpotifyWebHelper;
-const api = new AppleScriptApi ();
+const WebHelperApi = require ("../src/").SpotifyWebHelper;
+const api = new WebHelperApi ();
 
 // Using an async function
 // You an also use Promises (.then(), .catch(), ...)

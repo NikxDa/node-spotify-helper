@@ -1,11 +1,11 @@
 // Packages
 const request       = require ("request-promise-native");
-const portscanner   = require ("portscanner");
 const ps            = require ("node-ps");
 
 // Native
 const { spawn }     = require ("child_process");
 const path          = require ("path");
+const net           = require ("net");
 
 class SpotifyWebHelper {
     constructor (config) {
@@ -27,7 +27,7 @@ class SpotifyWebHelper {
         const randomPart = Math.random ().toString (36).substr (2, 9);
 
         // Build the base url
-        let url = `https://${randomPart}${baseUrl}:${this.helperPort}${path}?`;
+        let url = `http://${randomPart}${baseUrl}:${this.helperPort}${path}?`;
 
         // Set CSRF and OAuth if the tokens are set on the instance
         if (this.csrfToken && this.oAuthToken)
@@ -319,12 +319,44 @@ class SpotifyWebHelper {
         }
     }
 
+    find_first_local_port_in_use (start, end) {
+        function is_local_port_in_use (port) {
+            function promiseWrapper (resolve, reject) {
+                const server = net.createServer ();
+                const cleanup = () => {
+                    server.removeAllListeners ('error');
+                    server.removeAllListeners ('listening');
+                    server.close ();
+                    server.unref ();
+                };
+                server.once ('error', err => {
+                    cleanup ();
+                    resolve (err.code === 'EADDRINUSE');
+                });
+                server.once ('listening', () => {
+                    cleanup ();
+                    resolve (false);
+                });
+                server.listen (port, '127.0.0.1');
+            }
+            return new Promise (promiseWrapper);
+        }
+        async function promiseWrapper (resolve, reject) {
+            const ports = new Array (end - start).fill ().map ((_, i) => i + start);
+            for (let port of ports) {
+                const result = await is_local_port_in_use (port);
+                if (result) return resolve (port);
+            }
+            reject ();
+        }
+        return new Promise (promiseWrapper);
+    }
+
     async getWebHelperPort () {
         try {
             // Scan the default ports
             // Range: 4370 - 4390
-            const port = await portscanner.findAPortInUse (4370, 4390, "127.0.0.1");
-            return port;
+            return await this.find_first_local_port_in_use (4370, 4390);
         } catch (err) {
             // No used port found. Damn. Return -1
             return -1;
@@ -337,6 +369,11 @@ class SpotifyWebHelper {
 
         // Promise Wrapper
         function promiseWrapper (resolve, reject) {
+            // HACK: Prevent 'windows not supported' error
+            if (/^win/.test (process.platform)) {
+                resolve (true);
+                return;
+            }
             // Search for the Process by Path
             ps.lookup ({ command: webHelperLocation }, (err, results) => {
                 // Error? Reject
@@ -371,7 +408,7 @@ class SpotifyWebHelper {
         // Other
         else
             // Cannot currently support because I have no idea what paths are used
-            return false;
+            throw new Error ("WebHelper not found!");
     }
 
     buildRequestOptions (uri) {
