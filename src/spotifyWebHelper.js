@@ -1,6 +1,6 @@
 // Packages
 const request       = require ("request-promise-native");
-const ps            = require ("node-ps");
+const ps            = require ("ps-list");
 
 // Native
 const { spawn }     = require ("child_process");
@@ -64,7 +64,7 @@ class SpotifyWebHelper {
 
         // Output the above warning
         if (this.warnings)
-            console.log ("The seek() function seems to be rarely supported. Use it wisely.");
+            console.log ("The seek() function seems to be barely supported. It's not guaranteed that this will be working.");
 
         // Get currently playing URI
         const status = await this.status ();
@@ -319,36 +319,64 @@ class SpotifyWebHelper {
         }
     }
 
-    find_first_local_port_in_use (start, end) {
-        function is_local_port_in_use (port) {
+    // Custom portscanner implemented by @SplittyDev
+    findFirstLocalPortInUse (from, to) {
+        // Function to check whether a port is in use
+        function localPortInUse (port) {
             function promiseWrapper (resolve, reject) {
+                // Create a server
                 const server = net.createServer ();
+
+                // Create a cleanup function for the server
                 const cleanup = () => {
-                    server.removeAllListeners ('error');
-                    server.removeAllListeners ('listening');
+                    server.removeAllListeners ("error");
+                    server.removeAllListeners ("listening");
                     server.close ();
                     server.unref ();
                 };
-                server.once ('error', err => {
+
+                // Server error handler
+                server.once ("error", err => {
+                    // Clean the server
                     cleanup ();
-                    resolve (err.code === 'EADDRINUSE');
+
+                    // Check whether the port was in use (-> portscan successful)
+                    resolve (err.code === "EADDRINUSE")
                 });
-                server.once ('listening', () => {
+
+                // Server listening handler
+                server.once ("listening", () => {
+                    // Server is listening. The port was not in use. Cleanup and resolve.
                     cleanup ();
                     resolve (false);
                 });
-                server.listen (port, '127.0.0.1');
+
+                // Listen on port
+                server.listen (port, "127.0.0.1");
             }
+
+            // Return the Promise
             return new Promise (promiseWrapper);
         }
+
         async function promiseWrapper (resolve, reject) {
-            const ports = new Array (end - start).fill ().map ((_, i) => i + start);
+            // Create an array and map the ports
+            const ports = new Array (to - from).fill ().map ((_, i) => i + from);
+
+            // Check all ports
             for (let port of ports) {
-                const result = await is_local_port_in_use (port);
+                // Perform a portscan
+                const result = await localPortInUse (port);
+
+                // Successful? Return the port of interest
                 if (result) return resolve (port);
             }
+
+            // No port found. Reject.
             reject ();
         }
+
+        // Return the Promise
         return new Promise (promiseWrapper);
     }
 
@@ -356,7 +384,7 @@ class SpotifyWebHelper {
         try {
             // Scan the default ports
             // Range: 4370 - 4390
-            return await this.find_first_local_port_in_use (4370, 4390);
+            return await this.findFirstLocalPortInUse (4370, 4390);
         } catch (err) {
             // No used port found. Damn. Return -1
             return -1;
@@ -368,20 +396,21 @@ class SpotifyWebHelper {
         const webHelperLocation = this.getWebHelperLocation ();
 
         // Promise Wrapper
-        function promiseWrapper (resolve, reject) {
-            // HACK: Prevent 'windows not supported' error
-            if (/^win/.test (process.platform)) {
-                resolve (true);
-                return;
-            }
-            // Search for the Process by Path
-            ps.lookup ({ command: webHelperLocation }, (err, results) => {
-                // Error? Reject
-                if (err) reject (err);
+        async function promiseWrapper (resolve, reject) {
+            // Grab all processes
+            let processList = await ps ();
 
-                // Check whether there are running processes that match and resolve
-                resolve (results.length > 0);
-            });
+            // Iterate the processes
+            for (let i = 0; i < processList.length; i++) {
+                let process = processList [i];
+
+                // Is it the WebHelper?
+                if (process.cmd.indexOf ("SpotifyWebHelper") >= 0)
+                    resolve (true);
+            }
+
+            // No WebHelper found
+            resolve (false);
         }
 
         // Return the Promise

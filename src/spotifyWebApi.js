@@ -26,7 +26,7 @@ class SpotifyWebApi {
             "Accept": "application/json"
         };
 
-        const query = `?query=${text}&type=${type}${(limit) ? "&limit=" + limit : ""}${(offset) ? "&offset=" + offset : ""}&market=${this.market}`;
+        const query = `?query=${text}&type=${type}${(limit) ? "&limit=" + limit : ""}${(offset) ? "&offset=" + offset : ""}${(this.market) ? "&market=" + this.market : ""}`;
         const url = this.urls.search + query;
 
         const response = await request ({ uri: url, headers: headers });
